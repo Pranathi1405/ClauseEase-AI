@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processing Results - Contract Language Simplifier</title>
+    <link rel="stylesheet" href="results.css?v=12.0">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <div class="brand-icon">📋</div>
+            <div class="brand-info">
+                <h2>Clause Ease</h2>
+                <p>AI Based Contract Language Simplifier</p>
+            </div>
+        </div>
+        <div class="nav-actions">
+            <span class="welcome-text" id="user-name">Welcome back</span>
+            <button class="btn-signout" onclick="handleLogout()">
+                <span>🚪</span> Sign Out
+            </button>
+        </div>
+    </nav>
+
+    <div class="results-container">
+        <div class="results-header">
+            <div class="header-left">
+                <h1>Processing Results</h1>
+                <div class="status-badge">
+                    <span class="status-icon">✓</span>
+                    <span>Processing completed</span>
+                </div>
+            </div>
+            <button class="btn-upload-another" onclick="uploadAnother()">
+                <span class="arrow-icon"></span>←</span> Upload Another
+            </button>
+        </div>
+
+        <div class="info-section">
+            <div class="info-card-full">
+                <div class="info-header">
+                    <span class="info-icon">📄</span>
+                    <span>Documents</span>
+                </div>
+                <div class="info-content">
+                    <div class="document-list" id="document-list">
+                        <div class="document-item">
+                            <span class="doc-bullet">•</span>
+                            <span id="doc-filename">Loading...</span>
+                        </div>
+                    </div>
+                    <div class="info-meta">
+                        <span id="file-count">1 file processed</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="summary-section">
+            <!-- Charts Section -->
+            <div class="charts-container">
+                    <div class="chart-card">
+                        <h3 class="chart-title">📊 Clause Types Distribution</h3>
+                        <canvas id="clauseTypeChart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3 class="chart-title">📝 Text Statistics Comparison</h3>
+                        <canvas id="statsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Original Summary Stats -->
+            <div class="summary-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">🔍</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="clause-count">0</div>
+                        <div class="stat-label">Clauses Found</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⚖️</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="terms-count">0</div>
+                        <div class="stat-label">Legal Terms</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📝</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="word-count">0</div>
+                        <div class="stat-label">Total Words</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✨</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="simplified-count">0</div>
+                        <div class="stat-label">Simplified</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="results-main">
+            <div class="results-tabs">
+                <button class="tab-btn active" data-tab="analysis" onclick="switchTab('analysis')">
+                    <span class="tab-icon">📊</span>
+                    <span>Text Analysis</span>
+                </button>
+                <button class="tab-btn" data-tab="clauses" onclick="switchTab('clauses')">
+                    <span class="tab-icon">📋</span>
+                    <span>Detected Clauses</span>
+                </button>
+                <button class="tab-btn" data-tab="terms" onclick="switchTab('terms')">
+                    <span class="tab-icon">⚖️</span>
+                    <span>Legal Terms</span>
+                </button>
+                <button class="tab-btn" data-tab="simplified" onclick="switchTab('simplified')">
+                    <span class="tab-icon">✨</span>
+                    <span>Simplified Text</span>
+                </button>
+            </div>
+
+            <div class="results-content">
+                <!-- Text Analysis Tab -->
+                <div class="tab-content active" id="analysis-content">
+                    <div class="content-header">
+                        <h3>Side-by-Side Comparison</h3>
+                        <p class="content-subtitle">Original vs Simplified Text</p>
+                    </div>
+                    <div class="comparison-view">
+                        <div class="comparison-panel">
+                            <div class="panel-header">
+                                <h4>📄 Original Text</h4>
+                                <div class="panel-stats">
+                                    <span id="original-word-count">0 words</span>
+                                    <span>•</span>
+                                    <span id="original-sentence-count">0 sentences</span>
+                                </div>
+                            </div>
+                            <div class="panel-content" id="original-text-display">
+                                Loading original text...
+                            </div>
+                        </div>
+                        <div class="comparison-panel">
+                            <div class="panel-header">
+                                <h4>✨ Simplified Text</h4>
+                                <div class="panel-stats">
+                                    <span id="simplified-word-count">0 words</span>
+                                    <span>•</span>
+                                    <span id="simplified-sentence-count">0 sentences</span>
+                                </div>
+                            </div>
+                            <div class="panel-content" id="simplified-text-display">
+                                Loading simplified text...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="clauses-content">
+                    <div class="content-header">
+                        <h3>Extracted Clauses</h3>
+                        <p class="content-subtitle" id="clauses-subtitle">Clauses found in the document</p>
+                    </div>
+                    <div class="clauses-list" id="clauses-list">
+                        <!-- Clauses will be populated here -->
+                    </div>
+                </div>
+
+                <div class="tab-content" id="terms-content">
+                    <div class="content-header">
+                        <h3>Legal Terms Dictionary</h3>
+                        <p class="content-subtitle" id="terms-subtitle">Legal terms identified in the document</p>
+                    </div>
+                    <div class="terms-list" id="terms-list">
+                        <!-- Terms will be populated here -->
+                    </div>
+                </div>
+
+                <div class="tab-content" id="simplified-content">
+                    <div class="content-header">
+                        <h3>Simplified Language</h3>
+                        <p class="content-subtitle" id="simplified-subtitle">Plain language version of your contract</p>
+                    </div>
+                    <div class="simplified-list" id="simplified-list">
+                        <!-- Simplified text will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="results.js?v=14.0"></script>
+</body>
+</html>
