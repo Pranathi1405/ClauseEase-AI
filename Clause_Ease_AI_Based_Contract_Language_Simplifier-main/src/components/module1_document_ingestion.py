@@ -45,3 +45,6 @@ if __name__ == "__main__":
     
     print("=== Extracted Contract Text ===\n")
     print(extracted)
+
+
+#

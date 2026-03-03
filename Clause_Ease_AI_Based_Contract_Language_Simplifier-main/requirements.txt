@@ -17,3 +17,4 @@ transformers==4.56.2
 torch==2.8.0
 matplotlib==3.8.2
 seaborn==0.13.0
+gunicorn
